@@ -215,15 +215,7 @@
 				txt += `Vidio : ${get_result.video}\n`
 				buffer = await getBuffer(get_result.user_picture)
 				fadlan.sendMessage(from, buffer, image, {quoted: msg, caption: txt})
-				break 
-				case `tiktod`:
-                    if (args.length == 0) return reply(`Example: ${prefix + command} https://vt.tiktok.com/ZSwWCk5o/`)
-                    ini_url = args[0]
-                    ini_url = `https://api.lolhuman.xyz/api/tiktok?apikey=${LolApi}&url=${ini_url}`
-                    get_result = await getJson(ini_url)
-                    ini_buffer = await getBuffer(get_result.result.link)
-                    await fadlan.sendMessage(from, ini_buffer, video, { quoted: msg })
-                    break 
+				break
                     
 			}
 			

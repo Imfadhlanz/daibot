@@ -1,8 +1,3 @@
-// Thanks To Fazone
-// Gw Cuma Ngrecode
-// lagian ga gw duitin 
-// buly saya, maka saya akan sukses.
-// fiture masih dikit kalau mau update chat gw aja di wa tod
 const
 	{
 		WAConnection,
@@ -17,11 +12,10 @@ const
 		ProxyAgent,
 		GroupSettingChange,
 		waChatKey,
-		processbiasalah,
 		mentionedJid,
 		processTime,
 	} = require("@adiwajshing/baileys")
-
+	
 const { pesane } = require('./lib/msgcustom')	
 const { getJson, getBuffer,getRandom } = require("./lib/getdata");
 const moment = require("moment-timezone")
@@ -36,26 +30,28 @@ const { Readable, Duplex } = require('stream');
 const tebakan = require('./lib/tebak')
 const path = require('path')
 const os = require('os')
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+//const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(ffmpegPath);
-const imgbb = require('imgbb-uploader')
+//ffmpeg.setFfmpegPath(ffmpegPath);
 const FadhlanKhun = JSON.parse(fs.readFileSync('./f4dhl4n/apake.json'))
-
-/***NGEDIT BAYAR NGEN***/
-
-//kontak
-
+const { listsurah } = require('./f4dhl4n/listsurah')
+// Vcard
 const vcard = 'BEGIN:VCARD\n'  //Jangan diganti,Ntar error
             + 'VERSION:3.0\n'  //Jangan diganti,Ntar error
             + 'FN: Fadhlan\n'  // Ganti jadi namamu
             + 'ORG:Pengembang ${namabot};\n'  // Ganti jadi namamu/Botmu
             + 'TEL;type=CELL;type=VOICE;waid=6285781187685:+6285781187685\n'  // Ganti jadi nomormu, tapi jangan ubah polanya
             + 'END:VCARD' // Jangan diganti,Ntar Error
+// Function Owner
+nomerowner = FadhlanKhun.nomerlu
+nomer2 = FadhlanKhun.nomer2
+namabot = FadhlanKhun.bot
+namaowner = FadhlanKhun.nama
+
+
 // COLOR
 const color = (text, color) => {
     return !color ? chalk.green(text) : chalk.keyword(color)(text)
-
 }
 
 ///Function batrai
@@ -65,12 +61,9 @@ isCharge: "" || false}
 
 ///Function
 selfna = true
-fakenya = 'Fadhlan Kun'
+fakenya = 'fadhlankhun'
 apikey = 'GaluhTbit'
 LolApi = 'genbotkey' //beli apikey di api.lolhuman.xyz//
-cr = ',Fadhlan Botsz'
-onlydev = 'onlygay'
-
 var AFK = {
     isAfk: false,
     reason: false,
@@ -78,16 +71,8 @@ var AFK = {
 };
 nopref = false
 //
-const { listsurah } = require('./f4dhl4n/listsurah')
 
-nomerowner = FadhlanKhun.nomerlu
-nomer2 = FadhlanKhun.nomer2
-namabot = FadhlanKhun.bot
-namaowner = FadhlanKhun.nama
-
-const ownerNumber = [`${nomerowner}@s.whatsapp.net`]
-
-
+	
 module.exports = fadlan = async (fadlan, msg) => {
 	try {
         if (!msg.hasNewMessage) return
@@ -102,7 +87,7 @@ module.exports = fadlan = async (fadlan, msg) => {
         const type = Object.keys(msg.message)[0]        
         const cmd = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : ''.slice(1).trim().split(/ +/).shift().toLowerCase()	
 		const fadhlankhun = new pesane(fadlan, msg)
-		const prefix = /^[F]/.test(cmd) ? cmd.match(/^[F]/gi) : '-'          	
+		const prefix = /^[°•π÷×¶∆£¢€¥®™=|~!#$%^&.?/\\©^z+*@,;]/.test(cmd) ? cmd.match(/^[°•π÷×¶∆£¢€¥®™=|~!#$%^&.?/\\©^z+*,;]/gi) : '-'          	
         body = (type === 'conversation' && msg.message.conversation.startsWith(prefix)) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption.startsWith(prefix) ? msg.message.imageMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption.startsWith(prefix) ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text.startsWith(prefix) ? msg.message.extendedTextMessage.text : ''
 		budy = (type === 'conversation') ? msg.message.conversation : (type === 'extendedTextMessage') ? msg.message.extendedTextMessage.text : ''
 		const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()		
@@ -114,6 +99,7 @@ module.exports = fadlan = async (fadlan, msg) => {
 		const q = args.join(' ')
 		const botNumber = fadlan.user.jid
 		const isGroup = from.endsWith('@g.us')
+		const ownerNumber = [`${nomerowner}@s.whatsapp.net`]
 		let sender = isGroup ? msg.participant : msg.key.remoteJid
 		const totalchat = await fadlan.chats.all()
 		const groupMetadata = isGroup ? await fadlan.groupMetadata(from) : ''
@@ -122,31 +108,28 @@ module.exports = fadlan = async (fadlan, msg) => {
 		const groupMembers = isGroup ? groupMetadata.participants : ''
 		const groupDesc = isGroup ? groupMetadata.desc : ''
 		const groupOwner = isGroup ? groupMetadata.owner : ''
-		const tescuk = ["0@s.whatsapp.net"]
 		const getGroupAdmins = (participants) => {
-
 			admins = []
 			for (let i of participants) {
 			i.isAdmin ? admins.push(i.jid) : ''
 			}
-
 			return admins
 		}
-
+		// mentions
 		const mentions = (teks, memberr, id) => {
 				(id == null || id == undefined || id == false) ? fadlan.sendMessage(from, teks.trim(), extendedText, {contextInfo: {"mentionedJid": memberr}}) : fadlan.sendMessage(from, teks.trim(), extendedText, {quoted: msg, contextInfo: {"mentionedJid": memberr}})
           }
-          // keren
+          // bapk ngentd
       if (!isCmd && msg.message) { 
-for (let i of totalchat) { 
-fadlan.updatePresence(i.jid, Presence.recording) 
-} 
-}
-const sleep = async (ms) => {
-return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-		const isOwner = ownerNumber.includes(sender)
+			for (let i of totalchat) { 
+			fadlan.updatePresence(i.jid, Presence.recording) 
+			} 
+			}
+			const sleep = async (ms) => {
+			return new Promise(resolve => setTimeout(resolve, ms));
+			}
+			// akhir
+        const isOwner = ownerNumber.includes(sender)
 		const groupAdmins = isGroup ? getGroupAdmins(groupMembers) : ''
 		const isBotGroupAdmins = groupAdmins.includes(botNumber) || false
 		const isGroupAdmins = groupAdmins.includes(sender) || false
@@ -164,7 +147,6 @@ return new Promise(resolve => setTimeout(resolve, ms));
 		function pad(s){
 			return (s < 10 ? '0' : '') + s;
 		}
-
 		var hours = Math.floor(seconds / (60*60));
 		var minutes = Math.floor(seconds % (60*60) / 60);
 		var seconds = Math.floor(seconds % 60);
@@ -178,31 +160,28 @@ return new Promise(resolve => setTimeout(resolve, ms));
 			var m = Math.floor(d % 3600 / 60);
 			var s = Math.floor(d % 3600 % 60);
 
-
 			var hDisplay = h > 0 ? h + (h == 1 ? " " + " Jam" + ", " : " " + " Jam" + ", ") : "";
 			var mDisplay = m > 0 ? m + (m == 1 ? " " + " Menit" + ", " : " " + " Menit" + ", ") : "";
 			var sDisplay = s > 0 ? s + (s == 1 ? " " + " Detik" : " " + " Detik") : "";
 			return hDisplay + mDisplay + sDisplay; 
 		}		
-
+		
 		const reply = async (teknya) => {
 			return fadhlankhun.sendMessage(teknya, MessageType.text, {quoted: fadhlankhun.data})
-
 		}	 
-
+		
 		warn = {
 			errorne: {
 				wFormat: 'Format Salah!!!, Silahkan Cek Kembali...',
 				onGroup: 'Khusus Di Grup!!!',
-				onSelf: 'Only Self!!!',
-				fad: '*Perintah Hanya Untuk Owner, lu siapa si?*'
+				onSelf: 'Only Self!!!'
 			},
 			mess: {
 				wait: 'Tunggu Sebentar!'
 			}
 		}
-
-  dabes = new (require('./lib/database'))(`dabes.json`, null, 2)
+		
+		dabes = new (require('./lib/database'))(`dabes.json`, null, 2)
 		if (!dabes.data.users) dabes.data = {
 		  users: {},
 		  audio: {},
@@ -218,11 +197,12 @@ return new Promise(resolve => setTimeout(resolve, ms));
 				Kirim.FakeStatus(from,'*Saya Tidak Lagi Offline!*',fakenya);
 			}
 		}
-		tebakan(fadlan, msg, prefix)
+		
 		
 		if (!isGroup && isCmd) console.log('\x1b[1;31m~\x1b[1;37m>', '[\x1b[1;32mEXEC\x1b[1;37m]', time, color(command), 'from', color(sender.split('@')[0]), 'args :', color(args.length))
      	if (isCmd && isGroup) console.log('\x1b[1;31m~\x1b[1;37m>', '[\x1b[1;32mEXEC\x1b[1;37m]', time, color(command), 'from', color(sender.split('@')[0]), 'in', color(groupName), 'args :', color(args.length))
 		if(!msg.key.fromMe && selfna) return
+		tebakan(fadlan, msg, prefix)
 		fs.readdirSync('./plugins').forEach(plugin => {
             if(path.extname(plugin).toLowerCase() == '.js') {
                 eval(fs.readFileSync('./plugins/' + plugin,  'utf8'));
@@ -274,6 +254,3 @@ return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 ///Jika Edit Disini Maka Harus Restart Bot Ulang Secara Manual...
-
-
-		
